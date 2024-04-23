@@ -1,5 +1,50 @@
+// default
+//{
+//   "compilerOptions": {
+//     "lib": ["dom", "dom.iterable", "esnext"],
+//     "allowJs": true,
+//     "skipLibCheck": true,
+//     "strict": true,
+//     "noEmit": true,
+//     "esModuleInterop": true,
+//     "module": "esnext",
+//     "moduleResolution": "bundler",
+//     "resolveJsonModule": true,
+//     "isolatedModules": true,
+//     "jsx": "preserve",
+//     "incremental": true,
+//     "plugins": [
+//       {
+//         "name": "next"
+//       }
+//     ],
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     }
+//   },
+//   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+//   "exclude": ["node_modules"]
+// }
+
+//custom
 {
   "compilerOptions": {
+    "baseUrl": "./src/",
+    "paths": {
+      "@assets": ["assets"],
+      "@components": ["components"],
+      "@constants": ["constants"],
+      "@hooks": ["hooks"],
+      "@icons": ["icons"],
+      "@layouts": ["layouts"],
+      "@services": ["services"],
+      "@store": ["store"],
+      "@styles": ["styles"],
+      "@types": ["types"],
+      "@utils": ["utils"],
+      "@styles/*": ["styles/*"],
+      "@contexts": ["contexts"]
+    },
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -16,10 +61,7 @@
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
