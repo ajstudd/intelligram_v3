@@ -1,5 +1,5 @@
 import { Box, HStack, Icon, Spacer, Text, VStack } from "@chakra-ui/react";
-import { RootState, setToast, useAppDispatch } from "@store";
+import { RootState } from "@store";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -7,8 +7,6 @@ import { MdOutlineNotificationsNone, MdOutlinePerson } from "react-icons/md";
 import { useSelector } from "react-redux";
 
 export default function Sidebar() {
-  const toastData = useSelector((state: RootState) => state.ui.toast);
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const [dropdown, setDropdown] = useState(false);
   const list = [
@@ -19,10 +17,6 @@ export default function Sidebar() {
     {
       name: "Profile",
       link: "/profile",
-    },
-    {
-      name: "Messages",
-      link: "/messages",
     },
     {
       name: "Leaderboard",

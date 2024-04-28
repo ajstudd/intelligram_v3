@@ -1,38 +1,35 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
-
+// import authReducer from './authSlice';
 import {
-    uiReducer,
-    userReducer,
-    authReducer,
-    appStateReducer,
-    postReducer,
-    profileReducer,
-    cachedDataReducer,
-} from '@store';
+  authApi,
+  mediaApi,
+  userApi,
+  imageApi,
+} from '../services';
+import userSlice from './userSlice';
+import uiSlice from './uiSlice';
 
-const store = configureStore({
-    reducer: {
-        auth: authReducer,
-        cachedData: cachedDataReducer,
-        ui: uiReducer,
-        user: userReducer,
-        appState: appStateReducer,
-        post: postReducer,
-        profile: profileReducer,
-    },
+export const store = configureStore({
+  reducer: {
+    [authApi.reducerPath]: authApi.reducer,
+    [mediaApi.reducerPath]: mediaApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
+    [imageApi.reducerPath]: imageApi.reducer,
+    userSlice,
+    uiSlice,
+  },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(
+      authApi.middleware,
+      mediaApi.middleware,
+      userApi.middleware,
+      imageApi.middleware,
+    ),
 });
 
+// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
-
-export * from './auth';
-export * from './ui';
-export * from './user';
-export * from './appState';
-export * from './post';
-export * from './profile';
-export * from './cached';
-
-export default store;

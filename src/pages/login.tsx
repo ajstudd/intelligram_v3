@@ -7,7 +7,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { RootState, setToast, useAppDispatch } from "@store";
+import { useLoginMutation } from "@services";
+import { RootState } from "@store";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -15,25 +16,29 @@ import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 
 export default function Login() {
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+  });
+  const [login, { data: loginData, isLoading: isLoginLoading }] =
+  useLoginMutation();
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
+  };
+
+  useEffect
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-  const handleLogin = () => {
-    setIsLoading(true);
-    // This is a dummy function to simulate a login request
-    // In a real application, you would make an HTTP request to your server
-    // to authenticate the user
-    setTimeout(() => {
-      dispatch(
-        setToast({ message: "Login successful", type: "success", isOpen: true })
-      );
-      setIsLoading(false);
+  const handleLogin =async () => {
+    const loginres = await login({ email: loginForm.email, password: loginForm.password }).unwrap();
+    if (loginres?.token) {
+      localStorage.setItem("token", JSON.stringify(loginres.token));
       router.push("/");
-    }, 1000);
+    }
   };
 
   return (
@@ -50,10 +55,13 @@ export default function Login() {
         </Text>
         <VStack gap={"15px"} justifyContent={"center"} w={"100%"}>
           <Input
-            placeholder="Username"
+            placeholder="Email"
             border={"1px solid #DEDEDE"}
             p={6}
             w={"100%"}
+            name="email"
+            onChange={(e)=>changeHandler(e)}
+            value={loginForm.email}
             borderRadius={"5px"}
           />
           <InputGroup>
@@ -61,6 +69,9 @@ export default function Login() {
               placeholder="Password"
               w={"100%"}
               p={6}
+              name="password"
+              onChange={(e)=>changeHandler(e)}
+              value={loginForm.password}
               border={"1px solid #DEDEDE"}
               borderRadius={"5px"}
               type={isPasswordVisible ? "text" : "password"}
@@ -98,7 +109,7 @@ export default function Login() {
           onClick={handleLogin}
           className="bg-blue-500 h-[40px] flex w-full justify-center hover:bg-blue-700 text-white py-2 px-4 rounded"
         >
-          {isLoading ? (
+          {isLoginLoading ? (
             <Box
               display={"flex"}
               w={"100%"}

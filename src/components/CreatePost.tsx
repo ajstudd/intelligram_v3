@@ -1,18 +1,59 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Button, HStack, Text } from "@chakra-ui/react";
 import { FiImage, FiLock } from "react-icons/fi";
+import { GlobalModal } from "./GlobalModal";
 
 interface Props {
   isDisabled: boolean;
   isEditPost: boolean;
+  openLockModal: () => void;
 }
 
 export const PostWizard: React.FC<Props> = (props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [showModal, setShowModal] = useState(false)
   const [text, setText] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(event.target.value);
   };
+
+  const lockPostForm = () => {
+    return (
+      <div className="flex flex-col w-[100%] gap-2">
+        <Text>Lock The Post With Password</Text>
+        <input
+          className="w-full bg-gray-100 rounded-sm p-2 overflow-hidden focus:outline-none"
+          placeholder="Enter Password"
+        />
+        <div className="flex flex-row justify-between">
+        <Button
+          background={"#C800FF"}
+          padding={"4px"}
+          rounded={"4px"}
+
+          _hover={{
+            background: "#A300CC",
+          }}
+          color={"white"}
+        >
+          <Text fontWeight={"500"}>Lock</Text>
+        </Button>
+        <Button
+          background={"#F67280"}
+          padding={"4px"}
+          rounded={"4px"}
+          onClick={()=>setShowModal(false)}
+          _hover={{
+            background: "#F5606F",
+          }}
+          color={"white"}
+        >
+          <Text fontWeight={"500"}>Cancel</Text>
+        </Button>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     if (textareaRef.current?.style) {
@@ -49,6 +90,7 @@ export const PostWizard: React.FC<Props> = (props) => {
           _hover={{
             background: "#C4C4C4",
           }}
+          onClick={()=>setShowModal(!showModal)}
           cursor={"pointer"}
           rounded={"10%"}
         >
@@ -68,6 +110,12 @@ export const PostWizard: React.FC<Props> = (props) => {
       >
         <Text fontWeight={"500"}>Post</Text>
       </Button>
+      <GlobalModal isOpen={showModal} onClose={()=>{
+          setShowModal(false)
+        }}
+        content={lockPostForm()}
+        key={'test'}
+        />
     </div>
   );
 };

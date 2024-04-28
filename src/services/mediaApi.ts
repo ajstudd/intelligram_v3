@@ -1,5 +1,5 @@
-import { LocalStorageKeys } from '@/configs/localStorageKeys';
-import { ErrorResponse, UserAuthResponsePayload } from '@/types';
+import { LocalStorageKeys } from '../configs/localStorageKeys';
+import { ErrorResponse, UserAuthResponsePayload } from '../types';
 // import { reAuthBaseQuery } from '@/utils/reAuth';
 import {
   BaseQueryFn,
@@ -8,7 +8,7 @@ import {
   fetchBaseQuery,
 } from '@reduxjs/toolkit/query/react';
 
-const API_URL: string = import.meta.env.VITE_API_URL;
+const API_URL: string = process.env.NEXT_PUBLIC_API_URL!;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${API_URL}/media`,

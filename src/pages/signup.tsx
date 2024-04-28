@@ -7,7 +7,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { RootState, setToast, useAppDispatch } from "@store";
+import { RootState } from "@store";
 import Link from "next/link";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -15,7 +15,6 @@ import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 
 export default function SignUp() {
-  const dispatch = useAppDispatch();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -24,11 +23,6 @@ export default function SignUp() {
     // This is a dummy function to simulate a login request
     // In a real application, you would make an HTTP request to your server
     // to authenticate the user
-    setTimeout(() => {
-      dispatch(
-        setToast({ message: "Login successful", type: "success", isOpen: true })
-      );
-    }, 1000);
   };
 
   return (
@@ -102,7 +96,7 @@ export default function SignUp() {
           onClick={handleLogin}
           className="bg-blue-500 flex w-full text-center justify-center hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Login
+          Sign Up
         </button>
       </VStack>
     </div>

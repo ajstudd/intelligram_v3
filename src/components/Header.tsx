@@ -1,13 +1,11 @@
 import { Box, HStack, Icon, Spacer, Text } from "@chakra-ui/react";
-import { RootState, setToast, useAppDispatch } from "@store";
+import { RootState } from "@store";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { MdOutlineNotificationsNone, MdOutlinePerson } from "react-icons/md";
 import { useSelector } from "react-redux";
 
 export default function Header() {
-  const toastData = useSelector((state: RootState) => state.ui.toast);
-  const dispatch = useAppDispatch();
   const [dropdown, setDropdown] = useState(false);
   const [closeTimeoutId, setCloseTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
@@ -56,11 +54,9 @@ export default function Header() {
             }} >Profile</Text>
             <Text cursor={'pointer'} _hover={{
               color: 'red'
-            }} onClick={() => dispatch(setToast({
-              isOpen: true,
-              message: "Logged out successfully",
-              type:'success'
-            }))}
+            }} onClick={() => {
+              console.log("Logout");
+            }}
             >Logout</Text>
           </Box>
         )}

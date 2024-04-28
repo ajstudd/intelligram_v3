@@ -2,7 +2,7 @@
 import type { AppProps } from 'next/app'
 import { Roboto } from 'next/font/google'
 import { AppContextProvider } from '../contexts/AppContext';
-import store, { RootState, useAppDispatch } from '@store';
+import { store } from '../store';
 import { Provider } from 'react-redux';
 import { Metadata } from 'next';
 import { MainLayout } from 'components/Layout';

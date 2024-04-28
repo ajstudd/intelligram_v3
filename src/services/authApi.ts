@@ -11,19 +11,20 @@ import {
   ErrorResponse,
   IUser,
   IUserData,
-} from '@/types';
+} from '../types';
 import {
   LoginPasswordPayload,
   LoginPasswordResponsePayload,
+  LoginSuccessResponsePayload,
   Tokens,
   UserAuthRequestPayload,
   VerifyOtpRequestPayload,
-} from '@/types/auth';
+} from '../types/auth';
 // import { reAuthBaseQuery } from '@/utils/reAuth';
-import { transformAuthResponse } from '@/utils/transformTokens';
-import { LocalStorageKeys } from '@/configs/localStorageKeys';
+import { transformAuthResponse } from '../utils/transformTokens';
+import { LocalStorageKeys } from '../configs';
 
-const API_URL: string = import.meta.env.VITE_API_URL;
+const API_URL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 // const baseQuery = fetchBaseQuery({
 //   baseUrl: `${API_URL}/auth`,
@@ -40,7 +41,7 @@ export const authApi = createApi({
     { status: number; data: ErrorResponse }
   >,
   endpoints: builder => ({
-    login: builder.mutation<LoginAuthRequestPayload, LoginAuthRequestPayload>({
+    login: builder.mutation<LoginSuccessResponsePayload, LoginAuthRequestPayload>({
       query: body => ({
         url: '/login',
         method: 'POST',
@@ -143,7 +144,6 @@ export const authApi = createApi({
         },
       }),
     }),
-s
     logout: builder.mutation<void, string>({
       query: refreshToken => ({
         url: '/logout',

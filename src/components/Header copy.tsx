@@ -1,5 +1,5 @@
 import { Box, HStack, Icon, Spacer, Text } from "@chakra-ui/react";
-import { RootState, setToast, useAppDispatch } from "@store";
+import { RootState } from "@store";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { MdOutlineNotificationsNone, MdOutlinePerson } from "react-icons/md";

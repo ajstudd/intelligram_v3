@@ -1,12 +1,11 @@
-import { ICommentGroup } from '@/components/img-mapper/ImageComment';
-import { LocalStorageKeys } from '@/configs/localStorageKeys';
-import { UserAuthResponsePayload } from '@/types';
-import { SaveImageResponse } from '@/types/image';
-import { UpdateUserPayload, UpdateUserResponse } from '@/types/user';
+import { LocalStorageKeys } from '../configs/localStorageKeys';
+import { UserAuthResponsePayload } from '../types';
+import { SaveImageResponse } from '../types/image';
+import { UpdateUserPayload, UpdateUserResponse } from '../types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import FormData from 'form-data';
 
-const API_URL: string = import.meta.env.VITE_API_URL;
+const API_URL: string = process.env.NEXT_PUBLIC_API_URL!;
 
 export const imageApi = createApi({
   reducerPath: 'imageApi',
@@ -25,17 +24,7 @@ export const imageApi = createApi({
         },
       }),
     }),
-    applyComments: builder.mutation<
-      any,
-      { imageId: string; commentGroups: ICommentGroup[] }
-    >({
-      query: ({ commentGroups, imageId }) => ({
-        url: `/comment/${imageId}`,
-        method: 'POST',
-        body: commentGroups,
-      }),
-    }),
   }),
 });
 
-export const { useApplyCommentsMutation, useSaveImageMutation } = imageApi;
+export const { useSaveImageMutation } = imageApi;

@@ -1,11 +1,11 @@
-import { LocalStorageKeys } from '@/configs/localStorageKeys';
-import { UserAuthResponsePayload } from '@/types';
-import { SaveImageResponse } from '@/types/image';
-import { UpdateUserPayload, UpdateUserResponse } from '@/types/user';
-import { getToken } from '@/utils/getToken';
+import { LocalStorageKeys } from '../configs/localStorageKeys';
+import { UserAuthResponsePayload } from '../types';
+import { SaveImageResponse } from '../types/image';
+import { UpdateUserPayload, UpdateUserResponse } from '../types';
+import { getToken } from '../utils/getToken';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const API_URL: string = import.meta.env.VITE_API_URL;
+const API_URL: string = process.env.NEXT_PUBLIC_API_URL!;
 
 export const userApi = createApi({
   reducerPath: 'userApi',
