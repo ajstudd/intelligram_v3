@@ -1,4 +1,4 @@
-import { BREAKPOINTS } from '@/types/breakpoints';
+import { BREAKPOINTS } from '../types';
 
 export const renderResponsiveValues = (width: number, value: any[]) => {
   if (width < BREAKPOINTS.phone_small) {

@@ -1,4 +1,4 @@
-import { Tokens, UserAuthResponsePayload } from '@/types';
+import { Tokens, UserAuthResponsePayload } from '../types';
 
 const transformTokens = (response: Tokens) => {
   console.log('response', response);

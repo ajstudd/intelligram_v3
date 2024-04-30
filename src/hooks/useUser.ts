@@ -1,4 +1,4 @@
-import { useUpdateUserMutation } from '@/services/userApi';
+import { useUpdateUserMutation } from '../services/userApi';
 
 export const useUser = () => {
   const [
