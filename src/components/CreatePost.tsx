@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Box, Button, HStack, Text } from "@chakra-ui/react";
 import { FiImage, FiLock } from "react-icons/fi";
 import { GlobalModal } from "./GlobalModal";
+import { useSelector } from "react-redux";
+import { RootState } from "@store";
+import { useDispatch } from "react-redux";
+import { setCreatePostData } from "store/postsSlice";
 
 interface Props {
   isDisabled: boolean;
@@ -9,12 +13,69 @@ interface Props {
   openLockModal: () => void;
 }
 
+const MAX_FILESIZE = 5240000;
+
+function returnFileSize(size: number) {
+  if (size < 1024) {
+    return `${size} bytes`;
+  } else if (size >= 1024 && size < 1048576) {
+    return `${(size / 1024).toFixed(1)} KB`;
+  } else if (size >= 1048576) {
+    return `${(size / 1048576).toFixed(1)} MB`;
+  }
+}
+
 export const PostWizard: React.FC<Props> = (props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const dispatch = useDispatch();
+  const createPostData = useSelector((state: RootState) => state.postsSlice.createPostData);
+  console.log('createPostData', createPostData);
+  const [fileUrl, setFileUrl] = React.useState<string>('');
+  const [selectedFileUrl, setSelectedFileUrl] = React.useState<string>('');
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const imagePickerRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string>("");
+  const fileFormats='.jpg, .jpeg, .png';
+  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+    const fileExtension = `.${e.target.files[0].type.split('/')[1]}`;
+    if (fileFormats) {
+      if (!fileFormats.includes(fileExtension)) {
+        console.log("File format not supported.");
+        setError(
+          `File format not supported. Input file format: ${fileExtension}`
+        );
+        return;
+      }
+    }
+    const selectedFile = e.target.files ? e.target.files[0] : '';
+    const objectURL = selectedFile ? URL.createObjectURL(selectedFile) : '';
+
+    if (selectedFile) {
+      if (MAX_FILESIZE && selectedFile.size > MAX_FILESIZE) {
+        console.log("File size exceeding limit.");
+        setError(
+          `File size exceeding limit. Input file size: ${returnFileSize(
+            selectedFile.size
+          )}`
+        );
+      } else {
+        setFileUrl(objectURL);
+        setSelectedFileUrl(objectURL);
+        setSelectedFile(selectedFile);
+        setError('');
+        // props.onChange?.(e);
+      }
+    }
+  };
   const [showModal, setShowModal] = useState(false)
   const [text, setText] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(event.target.value);
+    dispatch(setCreatePostData({
+      content : event.target.value
+    }))
   };
 
   const lockPostForm = () => {
@@ -24,6 +85,10 @@ export const PostWizard: React.FC<Props> = (props) => {
         <input
           className="w-full bg-gray-100 rounded-sm p-2 overflow-hidden focus:outline-none"
           placeholder="Enter Password"
+          name="password"
+          onChange={(e)=>{
+            console.log("lock password");
+          }}
         />
         <div className="flex flex-row justify-between">
         <Button
@@ -69,7 +134,7 @@ export const PostWizard: React.FC<Props> = (props) => {
         ref={textareaRef}
         className="w-full resize-none bg-gray-100 rounded-sm p-2 overflow-hidden focus:outline-none"
         placeholder="Write your post here"
-        value={text}
+        value={createPostData.content}
         onChange={handleChange}
       ></textarea>
       <HStack gap={"10px"}>
@@ -79,6 +144,7 @@ export const PostWizard: React.FC<Props> = (props) => {
           _hover={{
             background: "#C4C4C4",
           }}
+          onClick={() => imagePickerRef.current?.click()}
           cursor={"pointer"}
           rounded={"10%"}
         >
@@ -98,6 +164,43 @@ export const PostWizard: React.FC<Props> = (props) => {
           <FiLock />
         </Box>
       </HStack>
+      <input
+            className={'hidden'}
+            type='file'
+            ref={imagePickerRef}
+            size={MAX_FILESIZE}
+            accept={fileFormats ?? ''}
+            onChange={onSelectFile}
+          />
+      {fileUrl && (
+        <div className="flex flex-col gap-2">
+          <img
+            src={fileUrl}
+            alt="Selected File"
+            className="w-40 h-40 object-cover"
+          />
+          <Button
+            background={"#C80"}
+            padding={"4px"}
+            className="w-40"
+            rounded={"4px"}
+            _hover={{
+              background: "#C70",
+            }}
+            onClick={
+              () => {
+                setFileUrl('');
+                setSelectedFileUrl('');
+                setSelectedFile(null);
+                imagePickerRef.current!.value = '';
+              }
+            }
+            color={"white"}
+          >
+            <Text fontWeight={"500"}>Remove</Text>
+          </Button>
+        </div>
+      )}
       <Button
         background={"#C800FF"}
         padding={"4px"}

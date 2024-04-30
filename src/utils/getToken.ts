@@ -9,6 +9,5 @@ export const getToken = () => {
   if (headerData) {
     token = headerData;
   }
-
   return token;
 };

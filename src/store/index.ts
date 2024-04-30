@@ -8,6 +8,7 @@ import {
 } from '../services';
 import userSlice from './userSlice';
 import uiSlice from './uiSlice';
+import postsSlice from './postsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [imageApi.reducerPath]: imageApi.reducer,
     userSlice,
+    postsSlice,
     uiSlice,
   },
   middleware: getDefaultMiddleware =>

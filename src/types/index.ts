@@ -4,3 +4,4 @@ export * from './routes';
 export * from './colors';
 export * from './breakpoints';
 export * from './user';
+export * from './posts';
