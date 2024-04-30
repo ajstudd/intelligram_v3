@@ -26,4 +26,4 @@ export const userApi = createApi({
   }),
 });
 
-export const { useUpdateUserImageMutation, useUpdateUserMutation } = userApi;
+export const { useUpdateUserMutation } = userApi;
