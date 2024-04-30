@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@store";
 import { useDispatch } from "react-redux";
 import { setCreatePostData } from "store/postsSlice";
+import { useCreatePostMutation } from "services/postApi";
 
 interface Props {
   isDisabled: boolean;
@@ -28,6 +29,15 @@ function returnFileSize(size: number) {
 export const PostWizard: React.FC<Props> = (props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dispatch = useDispatch();
+  const [
+    createPost,
+    {
+      data: createPostResponseData,
+      error: createPostError,
+      isError: isCreatePostError ,
+      isLoading: isCreatingPost,
+    },
+  ] = useCreatePostMutation();
   const createPostData = useSelector((state: RootState) => state.postsSlice.createPostData);
   console.log('createPostData', createPostData);
   const [fileUrl, setFileUrl] = React.useState<string>('');
@@ -125,7 +135,7 @@ export const PostWizard: React.FC<Props> = (props) => {
       textareaRef.current.style.height = "inherit";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
-  }, [text]);
+  }, [createPostData.content]);
 
   return (
     <div className="flex flex-col border-gray-400 rounded-sm border-solid border-[1px] p-2 gap-2 h-max w-full">

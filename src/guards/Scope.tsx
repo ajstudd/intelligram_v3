@@ -1,4 +1,4 @@
-import { UserAuthResponsePayload } from '@/types';
+import { UserAuthResponsePayload } from '../types';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
 
 interface ScopeProps {
