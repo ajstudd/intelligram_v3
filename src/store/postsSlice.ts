@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ICreatePostData, IPost } from 'types/posts';
+import { postApi } from 'services';
 
 export interface PostState {
   posts: IPost[];
@@ -42,9 +43,21 @@ const postSlice = createSlice({
     setSinglePost: (state, action: PayloadAction<IPost>) => {
       state.singlePost = action.payload;
     },
+    updatePostInList: (state, action: PayloadAction<IPost>) => {
+      const index = state.posts.findIndex(post => post.id === action.payload.id);
+      state.posts[index] = action.payload;
+    }
+  },
+  extraReducers(builder) {
+    builder.addMatcher(
+      postApi.endpoints.getAllPosts.matchFulfilled,
+      (state, action) => {
+        state.posts = action.payload.posts;
+      },
+    );
   },
 });
 
-export const { addPost,deletePost,setCreatePostData,setPosts,setSinglePost } = postSlice.actions;
+export const { addPost,deletePost,setCreatePostData,setPosts,setSinglePost,updatePostInList } = postSlice.actions;
 
 export default postSlice.reducer;

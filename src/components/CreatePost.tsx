@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Button, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Spinner, Text } from "@chakra-ui/react";
 import { FiImage, FiLock } from "react-icons/fi";
 import { GlobalModal } from "./GlobalModal";
 import { useSelector } from "react-redux";
 import { RootState } from "@store";
 import { useDispatch } from "react-redux";
-import { setCreatePostData } from "store/postsSlice";
+import { addPost, setCreatePostData, setPosts } from "store/postsSlice";
 import { useCreatePostMutation } from "services/postApi";
+import { useSaveImageMutation } from "@services";
 
 interface Props {
   isDisabled: boolean;
@@ -14,7 +15,7 @@ interface Props {
   openLockModal: () => void;
 }
 
-const MAX_FILESIZE = 5240000;
+const MAX_FILESIZE = 9240000;
 
 function returnFileSize(size: number) {
   if (size < 1024) {
@@ -34,23 +35,26 @@ export const PostWizard: React.FC<Props> = (props) => {
     {
       data: createPostResponseData,
       error: createPostError,
-      isError: isCreatePostError ,
+      isError: isCreatePostError,
       isLoading: isCreatingPost,
     },
   ] = useCreatePostMutation();
-  const createPostData = useSelector((state: RootState) => state.postsSlice.createPostData);
-  console.log('createPostData', createPostData);
-  const [fileUrl, setFileUrl] = React.useState<string>('');
-  const [selectedFileUrl, setSelectedFileUrl] = React.useState<string>('');
+  const [saveFile, { isLoading: isFileSaving, isSuccess, isUninitialized }] =
+    useSaveImageMutation();
+  const createPostData = useSelector(
+    (state: RootState) => state.postsSlice.createPostData
+  );
+  const [fileUrl, setFileUrl] = React.useState<string>("");
+  const [selectedFileUrl, setSelectedFileUrl] = React.useState<string>("");
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const imagePickerRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>("");
-  const fileFormats='.jpg, .jpeg, .png';
+  const fileFormats = ".jpg, .jpeg, .png";
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return;
     }
-    const fileExtension = `.${e.target.files[0].type.split('/')[1]}`;
+    const fileExtension = `.${e.target.files[0].type.split("/")[1]}`;
     if (fileFormats) {
       if (!fileFormats.includes(fileExtension)) {
         console.log("File format not supported.");
@@ -60,8 +64,8 @@ export const PostWizard: React.FC<Props> = (props) => {
         return;
       }
     }
-    const selectedFile = e.target.files ? e.target.files[0] : '';
-    const objectURL = selectedFile ? URL.createObjectURL(selectedFile) : '';
+    const selectedFile = e.target.files ? e.target.files[0] : "";
+    const objectURL = selectedFile ? URL.createObjectURL(selectedFile) : "";
 
     if (selectedFile) {
       if (MAX_FILESIZE && selectedFile.size > MAX_FILESIZE) {
@@ -75,17 +79,61 @@ export const PostWizard: React.FC<Props> = (props) => {
         setFileUrl(objectURL);
         setSelectedFileUrl(objectURL);
         setSelectedFile(selectedFile);
-        setError('');
-        // props.onChange?.(e);
+        setError("");
       }
     }
   };
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
   const [text, setText] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(setCreatePostData({
-      content : event.target.value
-    }))
+    dispatch(
+      setCreatePostData({
+        content: event.target.value,
+      })
+    );
+  };
+
+  const createPostHandler = async () => {
+    try {
+      let imageRes = null;
+      if (selectedFile) {
+        const form = new FormData();
+        form.append("image", selectedFile);
+        imageRes = await saveFile(form as any).unwrap();
+      }
+      const resp = await createPost({
+        title: createPostData.title,
+        content: createPostData.content,
+        password: createPostData.password,
+        isLocked: createPostData.isLocked,
+        visibleTo: createPostData.visibleTo,
+        images: imageRes ? [imageRes.image._id] : [],
+      }).unwrap();
+      console.log("resp", resp);
+      if (resp) {
+        dispatch(
+          addPost({
+            ...resp,
+            isLocked: createPostData.isLocked,
+            images: resp.images ? resp.images : [],
+            createdAt: new Date().toISOString(),
+            comments: [],
+          })
+        );
+        dispatch(
+          setCreatePostData({
+            title: "",
+            content: "",
+            password: "",
+            isLocked: false,
+            visibleTo: [],
+            images: [],
+          })
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const lockPostForm = () => {
@@ -96,39 +144,59 @@ export const PostWizard: React.FC<Props> = (props) => {
           className="w-full bg-gray-100 rounded-sm p-2 overflow-hidden focus:outline-none"
           placeholder="Enter Password"
           name="password"
-          onChange={(e)=>{
-            console.log("lock password");
+          value={createPostData.password}
+          onChange={(e) => {
+            dispatch(
+              setCreatePostData({
+                password: e.target.value,
+              })
+            );
           }}
         />
         <div className="flex flex-row justify-between">
-        <Button
-          background={"#C800FF"}
-          padding={"4px"}
-          rounded={"4px"}
-
-          _hover={{
-            background: "#A300CC",
-          }}
-          color={"white"}
-        >
-          <Text fontWeight={"500"}>Lock</Text>
-        </Button>
-        <Button
-          background={"#F67280"}
-          padding={"4px"}
-          rounded={"4px"}
-          onClick={()=>setShowModal(false)}
-          _hover={{
-            background: "#F5606F",
-          }}
-          color={"white"}
-        >
-          <Text fontWeight={"500"}>Cancel</Text>
-        </Button>
+          <Button
+            background={"#C800FF"}
+            padding={"4px"}
+            rounded={"4px"}
+            onClick={() => {
+              dispatch(
+                setCreatePostData({
+                  isLocked: true,
+                })
+              );
+              setShowModal(false);
+            }}
+            _hover={{
+              background: "#A300CC",
+            }}
+            color={"white"}
+          >
+            <Text fontWeight={"500"}>Lock</Text>
+          </Button>
+          <Button
+            background={"#F67280"}
+            padding={"4px"}
+            rounded={"4px"}
+            onClick={() => {
+              dispatch(
+                setCreatePostData({
+                  isLocked: false,
+                  password: "",
+                })
+              );
+              setShowModal(false);
+            }}
+            _hover={{
+              background: "#F5606F",
+            }}
+            color={"white"}
+          >
+            <Text fontWeight={"500"}>Cancel</Text>
+          </Button>
         </div>
       </div>
     );
-  }
+  };
 
   useEffect(() => {
     if (textareaRef.current?.style) {
@@ -162,11 +230,11 @@ export const PostWizard: React.FC<Props> = (props) => {
         </Box>
         <Box
           padding={"5px"}
-          background={"#DEDEDE"}
+          background={createPostData.isLocked ? "#59A5D8" : "#C4C4C4"}
           _hover={{
             background: "#C4C4C4",
           }}
-          onClick={()=>setShowModal(!showModal)}
+          onClick={() => setShowModal(!showModal)}
           cursor={"pointer"}
           rounded={"10%"}
         >
@@ -175,13 +243,13 @@ export const PostWizard: React.FC<Props> = (props) => {
         </Box>
       </HStack>
       <input
-            className={'hidden'}
-            type='file'
-            ref={imagePickerRef}
-            size={MAX_FILESIZE}
-            accept={fileFormats ?? ''}
-            onChange={onSelectFile}
-          />
+        className={"hidden"}
+        type="file"
+        ref={imagePickerRef}
+        size={MAX_FILESIZE}
+        accept={fileFormats ?? ""}
+        onChange={onSelectFile}
+      />
       {fileUrl && (
         <div className="flex flex-col gap-2">
           <img
@@ -197,14 +265,12 @@ export const PostWizard: React.FC<Props> = (props) => {
             _hover={{
               background: "#C70",
             }}
-            onClick={
-              () => {
-                setFileUrl('');
-                setSelectedFileUrl('');
-                setSelectedFile(null);
-                imagePickerRef.current!.value = '';
-              }
-            }
+            onClick={() => {
+              setFileUrl("");
+              setSelectedFileUrl("");
+              setSelectedFile(null);
+              imagePickerRef.current!.value = "";
+            }}
             color={"white"}
           >
             <Text fontWeight={"500"}>Remove</Text>
@@ -215,20 +281,29 @@ export const PostWizard: React.FC<Props> = (props) => {
         background={"#C800FF"}
         padding={"4px"}
         rounded={"4px"}
+        onClick={createPostHandler}
         _hover={{
           background: "#A300CC",
         }}
+        display={"flex"}
+        flexDirection={"row"}
+        gap={"5px"}
         disabled={props.isDisabled}
         color={"white"}
       >
+        {isCreatingPost ? (
+          <Spinner color="#ffffff" size={"xl"} thickness="2px" />
+        ) : null}
         <Text fontWeight={"500"}>Post</Text>
       </Button>
-      <GlobalModal isOpen={showModal} onClose={()=>{
-          setShowModal(false)
+      <GlobalModal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
         }}
         content={lockPostForm()}
-        key={'test'}
-        />
+        key={"test"}
+      />
     </div>
   );
 };

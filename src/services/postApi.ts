@@ -1,4 +1,4 @@
-import { PostResponse } from '../types';
+import { IPost, PostPayload, PostResponse,PostDocument } from '../types';
 import { getToken } from '../utils/getToken';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
@@ -22,7 +22,7 @@ export const postApi = createApi({
         };
       },
     }),
-    createPost: builder.mutation<PostResponse, FormData>({
+    createPost: builder.mutation<PostDocument, Partial<PostPayload>>({
       query: body => {
         const token = getToken();
         return {
@@ -37,7 +37,7 @@ export const postApi = createApi({
         };
       },
     }),
-    updatePost: builder.mutation<PostResponse, FormData>({
+    updatePost: builder.mutation<PostResponse, Partial<PostPayload>>({
       query: body => {
         const token = getToken();
         return {
@@ -52,12 +52,27 @@ export const postApi = createApi({
         };
       },
     }),
-    deletePost: builder.mutation<PostResponse, FormData>({
+    deletePost: builder.mutation<PostResponse, string>({
+      query: id => {
+        const token = getToken();
+        return {
+          url: `/delete/${id}`,
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
+    }),
+    fetchPostWithPassword: builder.mutation<PostDocument, {
+      postId: string;
+      password: string;
+    }>({
       query: body => {
         const token = getToken();
         return {
-          url: '/delete',
-          method: 'DELETE',
+          url: '/image',
+          method: 'POST',
           body,
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,7 +80,7 @@ export const postApi = createApi({
         };
       },
     }),
-    getSinglePost: builder.query<PostResponse, string>({
+    getSinglePost: builder.query<PostDocument, string>({
       query: id => {
         const token = getToken();
         return {
@@ -80,4 +95,4 @@ export const postApi = createApi({
   }),
 });
 
-export const { useCreatePostMutation, useDeletePostMutation, useGetAllPostsQuery, useLazyGetAllPostsQuery, useGetSinglePostQuery, useLazyGetSinglePostQuery, useUpdatePostMutation } = postApi;
+export const { useCreatePostMutation, useDeletePostMutation, useGetAllPostsQuery, useLazyGetAllPostsQuery,useFetchPostWithPasswordMutation, useGetSinglePostQuery, useLazyGetSinglePostQuery, useUpdatePostMutation } = postApi;

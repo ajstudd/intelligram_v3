@@ -5,7 +5,7 @@ export default function Profile() {
     name: "Junaid Ahmad",
     profile : "https://www.w3schools.com/howto/img_avatar.png",
     score : 100,
-    email :"ajxamd@gmail.com",
+    email :"j7654894110@gmail.com",
     rank : 1,
   }
 
@@ -29,21 +29,12 @@ export default function Profile() {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center">
+              <div className="flex flex-col items-center">
                 <div className="flex items-center">
                   <p className="text-lg font-bold">{profileInfo.score}</p>
                   <p className="text-sm ml-1">Points</p>
                 </div>
-              </div>
-            </div>
-            <div className="flex justify-between mt-4">
-              <div className="flex">
-                <div className="flex items-center">
-                  <div className="flex items-center">
-                    <p className="text-lg font-bold">{profileInfo.rank}</p>
-                    <p className="text-sm ml-1">Rank</p>
-                  </div>
-                </div>
+                    <p className="text-sm ml-1 font-bold">{profileInfo.rank} Rank</p>
               </div>
             </div>
           </div>

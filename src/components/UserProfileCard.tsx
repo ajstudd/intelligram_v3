@@ -5,17 +5,25 @@ import { BsThreeDots } from "react-icons/bs";
 interface Props {
   isDisabled?: boolean;
   isEditPost?: boolean;
+  username?: string;
+  profilePicture?: string;
+  createdAt?: string;
 }
 
 export const ProfileCard: React.FC<Props> = (props) => {
   const [dropdown, setDropdown] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null); // Specify the element type for the ref
-  const iconRef = useRef<HTMLDivElement | null>(null); // Specify the element type for the ref
+  const dropdownRef = useRef<HTMLDivElement | null>(null); 
+  const iconRef = useRef<HTMLDivElement | null>(null);
 
   // Toggle dropdown state
   const toggleDropdown = () => setDropdown(!dropdown);
 
-  // Click outside handler
+
+  const date = new Date(props.createdAt || new Date());
+  const time = `${date.getDate()} ${date.toLocaleString("default", {
+    month: "short",
+  })} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -24,7 +32,7 @@ export const ProfileCard: React.FC<Props> = (props) => {
         iconRef.current &&
         !iconRef.current.contains(event.target as Node)
       ) {
-        setDropdown(false); // Close the dropdown if click is outside
+        setDropdown(false); 
       }
     };
 
@@ -39,9 +47,11 @@ export const ProfileCard: React.FC<Props> = (props) => {
       <HStack>
         <Image alt="profile" height={"50"} width={"50"} src="/IGMSVG.svg" />
         <VStack justifyContent={"flex-start"} alignItems={"flex-start"}>
-          <Text>Hello</Text>
+          <Text>{
+            props.username || "John Doe"
+            }</Text>
           <Text fontSize={"12px"} color={"gray"}>
-            Hello
+            {time}
           </Text>
         </VStack>
       </HStack>

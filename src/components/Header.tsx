@@ -55,7 +55,8 @@ export default function Header() {
             <Text cursor={'pointer'} _hover={{
               color: 'red'
             }} onClick={() => {
-              console.log("Logout");
+              localStorage.removeItem('token');
+              window.location.href = '/login';
             }}
             >Logout</Text>
           </Box>

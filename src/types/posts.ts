@@ -14,6 +14,19 @@ export interface IComment {
   updatedAt?: Date;
 }
 
+export interface ImageResponse {
+  message: string;
+  image: ImageDetails;
+}
+
+interface ImageDetails {
+  image: string;
+  localPath: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 export interface ICreatePostData {
   title: string;
   content: string;
@@ -23,7 +36,7 @@ export interface ICreatePostData {
   images: File[];
 }
 
-interface PostDocument {
+export interface PostDocument {
     _id: string;
     comments: any[];
     content: string;
@@ -31,6 +44,7 @@ interface PostDocument {
     title: string;
     images: any[];
     ownerId: string;
+    password?: string;
     visibleTo: any[];
     createdAt: string;
     updatedAt: string;
@@ -60,9 +74,24 @@ export interface IPost {
   ownerId: string ;
   title: string;
   content: string;
-  password: string;
+  password?: string;
   isLocked: boolean;
+  createdAt?: string;
   visibleTo: IMention[];
   images: IImage[];
   comments: IPostComment[] | [];
+}
+
+
+export interface PostPayload {
+  _id: string;
+  id: string;
+  ownerId: string ;
+  title: string;
+  content: string;
+  password: string;
+  isLocked: boolean;
+  visibleTo?: IMention[];
+  images?: string[];
+  comments?: IPostComment[] | [];
 }
