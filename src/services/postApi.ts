@@ -11,6 +11,7 @@ export const postApi = createApi({
   }),
   endpoints: builder => ({
    getAllPosts  : builder.query<PostResponse, void>({
+    providesTags: ['Post'],
       query: () => {
         const token = getToken();
         return {
@@ -23,6 +24,7 @@ export const postApi = createApi({
       },
     }),
     createPost: builder.mutation<PostDocument, Partial<PostPayload>>({
+      invalidatesTags: ['Post'],
       query: body => {
         const token = getToken();
         return {
@@ -93,6 +95,7 @@ export const postApi = createApi({
       },
     }),
   }),
+  tagTypes: ['Post'],
 });
 
 export const { useCreatePostMutation, useDeletePostMutation, useGetAllPostsQuery, useLazyGetAllPostsQuery,useFetchPostWithPasswordMutation, useGetSinglePostQuery, useLazyGetSinglePostQuery, useUpdatePostMutation } = postApi;

@@ -1,3 +1,5 @@
+import { TUser } from "./user";
+
 export interface IImage {
   image: string;
   localPath: string;
@@ -43,7 +45,7 @@ export interface PostDocument {
     isLocked: boolean;
     title: string;
     images: any[];
-    ownerId: string;
+    user: TUser;
     password?: string;
     visibleTo: any[];
     createdAt: string;
@@ -71,7 +73,7 @@ export interface IMention {
 export interface IPost {
   _id: string;
   id: string;
-  ownerId: string ;
+  user: TUser;
   title: string;
   content: string;
   password?: string;

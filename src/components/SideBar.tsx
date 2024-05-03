@@ -31,7 +31,13 @@ export default function Sidebar() {
   return (
     <VStack w={"full"} minW={"100%"} height={"full"} alignItems={'flex-start'} borderBottom={"1px solid #DDDDDD"} p={5}>
       {list.map((item, index) => (
-        <Box key={index} className="hover:bg-blue-400 cursor-pointer flex-col w-[100%] min-w-[100%]">
+        <Box key={index}
+        padding={5}
+        style={{
+          backgroundColor: router.pathname === item.link ? '#4A90E2' : '',
+          color: router.pathname === item.link ? 'white' : ''
+        }}
+         className="hover:bg-blue-400 cursor-pointer flex-col w-[100%] min-w-[100%]">
         <Text
           onClick={() => {
             router.push(item.link);

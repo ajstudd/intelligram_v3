@@ -7,7 +7,7 @@ export const getToken = () => {
   let token = '';
   const headerData = localStorage.getItem(LocalStorageKeys.TOKEN);
   if (headerData) {
-    token = headerData;
+    token = JSON.parse(headerData);
   }
   return token;
 };

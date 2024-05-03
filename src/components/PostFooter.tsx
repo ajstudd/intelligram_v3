@@ -16,14 +16,21 @@ interface Props {
 }
 
 export const PostFooter: React.FC<Props> = (props) => {
+  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
+  const [likeCount, setLikeCount] = useState<number>(props.likes);
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-row gap-2 justify-between">
         <HStack gap={'10px'}>
           <HStack gap={'5px'} justifyContent={'center'} alignItems={'center'} justifyItems={'center'}>
-            <Text>{props.likes}</Text>
-            <LuThumbsUp style={{
-              marginBottom: '2px'
+            <Text>{likeCount}</Text>
+            <LuThumbsUp onClick={()=>{
+              setIsLiked(!isLiked);
+              setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
+            }} style={{
+              cursor: 'pointer',
+              marginBottom: '2px',
+              color: isLiked ? 'blue' : 'gray',
             }}/>
           </HStack>
           <HStack gap={'5px'} justifyContent={'center'} alignItems={'center'} justifyItems={'center'}>

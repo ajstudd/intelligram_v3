@@ -120,6 +120,10 @@ export const PostWizard: React.FC<Props> = (props) => {
             comments: [],
           })
         );
+        setFileUrl("");
+        setSelectedFileUrl("");
+        setSelectedFile(null);
+        imagePickerRef.current!.value = "";
         dispatch(
           setCreatePostData({
             title: "",
@@ -207,7 +211,7 @@ export const PostWizard: React.FC<Props> = (props) => {
 
   return (
     <div className="flex flex-col border-gray-400 rounded-sm border-solid border-[1px] p-2 gap-2 h-max w-full">
-      <Text>Create Post</Text>
+      <Text fontWeight={'600'}>Create Post</Text>
       <textarea
         ref={textareaRef}
         className="w-full resize-none bg-gray-100 rounded-sm p-2 overflow-hidden focus:outline-none"
@@ -230,7 +234,7 @@ export const PostWizard: React.FC<Props> = (props) => {
         </Box>
         <Box
           padding={"5px"}
-          background={createPostData.isLocked ? "#59A5D8" : "#C4C4C4"}
+          background={createPostData.isLocked ? "#59A5D8" : "#DEDEDE"}
           _hover={{
             background: "#C4C4C4",
           }}

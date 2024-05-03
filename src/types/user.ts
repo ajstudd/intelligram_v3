@@ -9,14 +9,14 @@ export interface IUser {
 }
 
 export interface TUser {
-  _id: string;
+  _id?: string;
   phone: string;
   name: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
-  photo: string;
-  id: string;
+  photo?: string;
+  id?: string;
   email: string;
 }
 export interface ToUser {
