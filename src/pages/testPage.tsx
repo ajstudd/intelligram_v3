@@ -18,7 +18,7 @@ import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 export default function TestPage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef  = React.useRef()
+  const btnRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <>
