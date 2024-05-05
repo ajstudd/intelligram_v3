@@ -4,20 +4,20 @@ export default function Leaderboard() {
   const profiles = [
     {
       imageUrl : 'https://www.w3schools.com/howto/img_avatar.png',
-      name: 'Junaid Ahmad',
+      name: 'Tripti Yadav',
       score : 100,
       rank : 1
     },
     {
       imageUrl : 'https://www.w3schools.com/howto/img_avatar.png',
-      name: 'Anurag Sharma',
-      score : 90,
+      name: 'Junaid Ahmad',
+      score : 100,
       rank : 2
     },
     {
       imageUrl : 'https://www.w3schools.com/howto/img_avatar.png',
-      name: 'Tripti Yadav',
-      score : 80,
+      name: 'Anurag Sharma',
+      score : 90,
       rank : 3
     },
     {
@@ -34,7 +34,7 @@ export default function Leaderboard() {
     },
     {
       imageUrl : 'https://www.w3schools.com/howto/img_avatar.png',
-      name: 'Shreya Mishra',
+      name: 'Tejas Mishra',
       score : 50,
       rank : 6
     },
