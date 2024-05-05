@@ -1,6 +1,7 @@
 // import '../styles/global.css';
 import type { AppProps } from 'next/app'
 import { Roboto } from 'next/font/google'
+import { ChakraProvider } from '@chakra-ui/react'
 import { AppContextProvider } from '../contexts/AppContext';
 import { store } from '../store';
 import { Provider } from 'react-redux';
@@ -24,7 +25,9 @@ export default function App({ Component, pageProps }: AppProps) {
 <Provider store={store}>
   <AppContextProvider>
     <MainLayout>
+      <ChakraProvider>
     <Component {...pageProps} />
+    </ChakraProvider>
     </MainLayout>
   </AppContextProvider>
 </Provider>

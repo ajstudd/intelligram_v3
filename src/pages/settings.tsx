@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Button, HStack, Switch, VStack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import React , {useState} from "react";
@@ -9,11 +9,13 @@ export default function Leaderboard() {
   const [lockAllPosts, setLockAllPosts] = useState(false);
   const [optOutOfDailyChallenges, setOptOutOfDailyChallenges] = useState(false);
     return (
-      <div className="flex flex-col py-2 gap-2 h-max w-full">
+      <div className="flex flex-col py-2 gap-4 h-max w-full">
         <Box>
           <h1 className="font-bold text-2xl">Settings</h1>
         </Box>
-        <Box>
+        <HStack w={'100%'}>
+          <VStack justifyContent={'start'} alignItems={'start'} w={'50%'}>
+        <Box display={'flex'} flexDirection={'column'} w={'100%'}>
           <h2>Minimum Score to Follow</h2>
           <input
           className="w-full bg-gray-100 rounded-sm p-2 overflow-hidden focus:outline-none"
@@ -21,22 +23,25 @@ export default function Leaderboard() {
           value={minimumScoreToFollow} onChange={(e) => setMinimumScoreToFollow(e.target.value)}
         />
         </Box>
-        <Box display={'flex'} flexDirection={'row'} gap={'5'} alignItems={'center'}>
+        <Box display={'flex'} flexDirection={'row'} w={'100%'} gap={'5'} justifyContent={'space-between'} alignItems={'center'}>
           <h2>Lock All Posts</h2>
-          <input
-          className=" bg-gray-100 rounded-sm gap-2 w-4 h-4"
-          type="checkbox" checked={lockAllPosts} onChange={(e) => setLockAllPosts(e.target.checked)}
-        />
-          {/* <input type="checkbox" checked={lockAllPosts} onChange={(e) => setLockAllPosts(e.target.checked)} /> */}
+          <Switch size='md' />
         </Box>
-        <Box display={'flex'} flexDirection={'row'} gap={'5'}  alignItems={'center'}>
+        <Box display={'flex'} flexDirection={'row'} w={'100%'} gap={'5'} justifyContent={'space-between'} alignItems={'center'}>
           <h2>Opt Out of Daily Challenges</h2>
-          <input
-          className=" bg-gray-100 rounded-sm w-4 h-4"
-          type="checkbox" checked={optOutOfDailyChallenges} onChange={(e) => setOptOutOfDailyChallenges(e.target.checked)}
-        />
-          {/* <input type="checkbox" checked={optOutOfDailyChallenges} onChange={(e) => setOptOutOfDailyChallenges(e.target.checked)} /> */}
+          <Switch size='md' />
         </Box>
+        </VStack>
+        <VStack justifyContent={'start'} alignItems={'start'} w={'50%'}>
+        </VStack>
+        </HStack>
+        <Button
+        style={{
+          backgroundColor: '#4A90E2',
+          color: 'white',
+          width: '20%',
+        }}
+        >Save</Button>
       </div>
     );
   }

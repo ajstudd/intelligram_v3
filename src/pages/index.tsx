@@ -1,4 +1,4 @@
-import { VStack } from "@chakra-ui/react";
+import { Switch, VStack } from "@chakra-ui/react";
 import React,{useState} from "react";
 import { RootState } from "@store";
 import { PostWizard } from "components/CreatePost";
@@ -72,7 +72,7 @@ export default function Page() {
         {allPosts && allPosts.map((post, index) => (
         <PostCard id={
           post._id
-        } isLocked={post.isLocked} key={index} createdAt={post.createdAt} username={"Junaid"} comments={post.comments.length} content={post.content} images={post.images.map((image) => `${API_URL}/image/get/${image._id}`)} 
+        } isLocked={post.isLocked} key={index} createdAt={post.createdAt} username={post.user.name} comments={post.comments.length} content={post.content} images={post.images.map((image) => `${API_URL}/image/get/${image._id}`)} 
         likes={0} isDisabled={false} isEditPost={false} />
         ))}
         <GlobalModal isOpen={showModal} onClose={()=>{

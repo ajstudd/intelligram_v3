@@ -1,9 +1,16 @@
 import {
+  Badge,
   Box,
   Input,
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  RangeSlider,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
+  RangeSliderTrack,
+  Stack,
+  Switch,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -60,32 +67,45 @@ export default function SignUp() {
             type="number"
             borderRadius={"5px"}
           />
-          <InputGroup >
+          <InputGroup>
             <Input
               placeholder="Password"
               w={"100%"}
               p={6}
-              border={"1px solid #DEDEDE"} borderRadius={"5px"}
+              border={"1px solid #DEDEDE"}
+              borderRadius={"5px"}
               type={isPasswordVisible ? "text" : "password"}
             />
-            <InputRightElement display={'flex'} justifyContent={'center'} alignItems={'center'} height={'100%'} pr={'10px'} cursor={'pointer'}>
-            <Box display={'flex'} justifyContent={'center'} alignItems={'center'} height={'100%'}>
-              {isPasswordVisible ? (
-                <IoEyeOutline onClick={togglePasswordVisibility} />
-              ) : (
-                <IoEyeOffOutline onClick={togglePasswordVisibility} />
-              )}
+            <InputRightElement
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              height={"100%"}
+              pr={"10px"}
+              cursor={"pointer"}
+            >
+              <Box
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                height={"100%"}
+              >
+                {isPasswordVisible ? (
+                  <IoEyeOutline onClick={togglePasswordVisibility} />
+                ) : (
+                  <IoEyeOffOutline onClick={togglePasswordVisibility} />
+                )}
               </Box>
             </InputRightElement>
           </InputGroup>
-              <Input
-                placeholder="Confirm Password"
-                w={"100%"}
-                border={"1px solid #DEDEDE"}
-                type={isPasswordVisible ? "text" : "password"}
-                p={6}
-                borderRadius={"5px"}
-              />
+          <Input
+            placeholder="Confirm Password"
+            w={"100%"}
+            border={"1px solid #DEDEDE"}
+            type={isPasswordVisible ? "text" : "password"}
+            p={6}
+            borderRadius={"5px"}
+          />
         </VStack>
         <VStack gap={"15px"}>
           <Text fontSize={"12px"}>
